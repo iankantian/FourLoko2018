@@ -39,6 +39,9 @@
 // MISO
 // SK
 
+#define IR_CLOCK_RATE    38000L
+
+
 void initPins() {
   pinMode(rightPx, INPUT);
   pinMode(in1R, OUTPUT);
@@ -60,6 +63,15 @@ void initPins() {
   pinMode(fRightPx, INPUT);
   pinMode(gyroZ, INPUT);
   pinMode(stdbyR, OUTPUT);
+}
+
+void startIrPwm() {
+  // todo: this example is to set timer 2,
+  // I REALLY NEED timer 4
+  TCCR4A = _BV(WGM41) | _BV(COM4A0);
+  TCCR4B = _BV(CS40);
+  // 36kHz carrier/timer
+  OCR4A = (F_CPU/(IR_CLOCK_RATE*2L)-1);
 }
 
 
