@@ -24,12 +24,12 @@
 #define in2R  13
 // 3.3V
 // AREF
-#define vSense A0     // battery sensing, on 3 cell lipo / 3: 10% is 3.7v reads about 435, 100% 4.2v reads 495
-#define lineLeft A1   // for detecting the edge of the sumo dohyo
+#define vSense    A0  // battery sensing, on 3 cell lipo / 3: 10% is 3.7v reads about 435, 100% 4.2v reads 495
+#define lineLeft  A1  // for detecting the edge of the sumo dohyo
 #define lineRight A2
-#define fRightPx A3   // far right of center IR detector
-#define gyroZ A4        // Z axis gyro! an analog sensor, might use it for directional integration?
-#define stdbyR A5       // for disabling the H-Bridge
+#define fRightPx  A3  // far right of center IR detector
+#define gyroZ     A4  // Z axis gyro! an analog sensor, might use it for directional integration?
+#define stdbyR    A5  // for disabling the H-Bridge
 // no
 // no
 // +5
