@@ -25,10 +25,10 @@
 // 3.3V
 // AREF
 #define vSense    A0  // battery sensing, on 3 cell lipo / 3: 10% is 3.7v reads about 435, 100% 4.2v reads 495
-#define lineLeft  A1  // for detecting the edge of the sumo dohyo
-#define lineRight A2
+#define edgeLeft  A1  // for detecting the edge of the sumo dohyo ~43 edge, 1017 dohyo
+#define edgeRight A2  // ~ 1012 black dohyo to 38 edge
 #define fRightPx  A3  // far right of center IR detector
-#define gyroZ     A4  // Z axis gyro! an analog sensor, might use it for directional integration?
+#define gyroZ     A4  // Z axis gyro! an analog sensor, might use it for directional integration? no rate is 293, reduces for CC rotation integrating delta at 50z gives units of about 2200 per rotation
 #define stdbyR    A5  // for disabling the H-Bridge
 // no
 // no
@@ -40,13 +40,15 @@
 // SK
 
 #define IR_CLOCK_RATE    38000L
-
+#define zeroRateGyroZ    293 // todo: do some automatic calibration instead
+int zThetaDisplacement = 0;
+#define zThetaDeadband   1
 
 void initPins() {
   pinMode(rightPx, INPUT);
   pinMode(in1R, OUTPUT);
-  pinMode(pwmR, OUTPUT);
-  pinMode(pwmL, OUTPUT);
+  pinMode(pwmR, INPUT); // TODO: SWITCH TO OUTPUT FOR USING MOTORS
+  pinMode(pwmL, INPUT); // TODO: SWITCH TO OUTPUT FOR USING MOTORS
   pinMode(in2L, OUTPUT);
   pinMode(in1L, OUTPUT);
   pinMode(stdbyL, OUTPUT);
@@ -58,20 +60,24 @@ void initPins() {
   pinMode(leftPx, INPUT);
   pinMode(in2R, OUTPUT);
   pinMode(vSense, INPUT);
-  pinMode(lineLeft, INPUT);
-  pinMode(lineRight, INPUT);
+  pinMode(edgeLeft, INPUT);
+  pinMode(edgeRight, INPUT);
   pinMode(fRightPx, INPUT);
   pinMode(gyroZ, INPUT);
   pinMode(stdbyR, OUTPUT);
 }
 
-void startIrPwm() {
+void startIrPwm(long int frequency) {
   // todo: this example is to set timer 2,
   // I REALLY NEED timer 4
   TCCR4A = _BV(WGM41) | _BV(COM4A0);
   TCCR4B = _BV(CS40);
-  // 36kHz carrier/timer
-  OCR4A = (F_CPU/(IR_CLOCK_RATE*2L)-1);
+  // 38kHz carrier/timer
+  OCR4A = (F_CPU/(frequency*2L)-1);
+}
+
+void stopIrPwm() {
+  OCR4A = 0;
 }
 
 
