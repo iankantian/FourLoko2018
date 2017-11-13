@@ -22,7 +22,7 @@
 #define fLefttPx 99    // far left of center opponent IR detector
 #define leftPx   99    // left of center opponent IR detector
 
-#define in2R  11
+#define in2R      11
 #define vSense    A0  // battery sensing, on 3 cell lipo / 3: 10% is 3.7v reads about 435, 100% 4.2v reads 495
 #define edgeLeft  A1  // for detecting the edge of the sumo dohyo ~43 edge, 1017 dohyo
 #define edgeRight A2  // ~ 1012 black dohyo to 38 white edge
@@ -37,3 +37,11 @@
 #define zeroRateGyroZ    293 // todo: do some automatic calibration instead
 int zThetaDisplacement = 0;
 #define zThetaDeadband   1
+
+#define farLeft   0
+#define left      1
+#define center    3
+#define right     4
+#define farRight  5
+#define coast false
+#define brake true

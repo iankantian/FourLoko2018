@@ -10,4 +10,10 @@ void setup() {
 }
 
 void loop() {
+//  motor(left, 80);
+//  motor(right, 80);
+//  delay(100);
+//  leftBrake();
+//  rightBrake();
+//  delay(4000);
 }

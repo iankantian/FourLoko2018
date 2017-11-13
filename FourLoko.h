@@ -1,31 +1,31 @@
 /**
- * FourLoko.h
- * Joshua Brown 2017
- * 
- * helper functions for FourLoko, my minisumo bot
- */
+   FourLoko.h
+   Joshua Brown 2017
+
+   helper functions for FourLoko, my minisumo bot
+*/
 
 void initPins() {
   pinMode(rightPx, INPUT);
-  pinMode(in1R, OUTPUT);
-  pinMode(pwmR, INPUT); // TODO: SWITCH TO OUTPUT FOR USING MOTORS
-  pinMode(pwmL, INPUT); // TODO: SWITCH TO OUTPUT FOR USING MOTORS
-  pinMode(in2L, OUTPUT);
+  pinMode(pwmR, OUTPUT); // TODO: SWITCH TO OUTPUT FOR USING MOTORS
+  pinMode(pwmL, OUTPUT); // TODO: SWITCH TO OUTPUT FOR USING MOTORS
   pinMode(in1L, OUTPUT);
+  pinMode(in2L, OUTPUT);
   pinMode(stdbyL, OUTPUT);
+  pinMode(stdbyR, OUTPUT);
+  pinMode(in1R, OUTPUT);
+  pinMode(in2R, OUTPUT);
   pinMode(irPwm, OUTPUT);
   pinMode(ctrPx, INPUT);
   pinMode(usrBtn1, INPUT);
   pinMode(usrBtn2, INPUT);
   pinMode(fLefttPx, INPUT);
   pinMode(leftPx, INPUT);
-  pinMode(in2R, OUTPUT);
   pinMode(vSense, INPUT);
   pinMode(edgeLeft, INPUT);
   pinMode(edgeRight, INPUT);
   pinMode(fRightPx, INPUT);
   pinMode(gyroZ, INPUT);
-  pinMode(stdbyR, OUTPUT);
 }
 
 void initIrPwm() {
@@ -53,8 +53,74 @@ void printOpponentSensors() {
 void updateGyroDisplacement() {
   int delta = analogRead(gyroZ) - zeroRateGyroZ;
   if (abs(delta) > zThetaDeadband) {
-      zThetaDisplacement = zThetaDisplacement + delta;
+    zThetaDisplacement = zThetaDisplacement + delta;
   }
 }
+
+void rightCoast() {
+  digitalWrite(stdbyR, LOW);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in1R, LOW);
+}
+
+void leftCoast() {
+  digitalWrite(stdbyL, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in1L, LOW);
+}
+
+void leftBrake() {
+  digitalWrite(stdbyL, HIGH);
+  digitalWrite(in2L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
+  digitalWrite(in1L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
+}
+
+void rightBrake() {
+  digitalWrite(stdbyR, HIGH);
+  digitalWrite(in2R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
+  digitalWrite(in1R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
+}
+
+void motor(int motor, int velocity) {
+  // set in** pins for forward or reverse rotation
+  if (velocity > 0) {
+    if (motor == right) {
+      digitalWrite(in1R, HIGH);
+      digitalWrite(in2R, LOW);
+    } else if (motor == left) {
+      digitalWrite(in1L, LOW);
+      digitalWrite(in2L, HIGH);
+    }
+  } else {
+    velocity = -velocity;
+
+    if (motor == right) {
+      digitalWrite(in1R, LOW);
+      digitalWrite(in2R, HIGH);
+    } else if (motor == left) {
+      digitalWrite(in1L, HIGH);
+      digitalWrite(in2L, LOW);
+    }
+  }
+
+  if (motor == right) {
+    // todo: figure out why this don't work on right motor but does on the left !
+    // rightGo(); is a test that works, so I'm not sure what I'm doing wrong,
+    // it may be that analogWrite upon standbyR is bad and doesn't always work?
+    // when it works it's a definitely different motor experience, seems faster for a given pwm.
+    // analogWrite(pwmR, 80);
+    // digitalWrite(stdbyR, HIGH);
+
+    digitalWrite(stdbyR, HIGH);
+    analogWrite(pwmR, velocity);
+    
+  } else if (motor == left) {
+    digitalWrite(stdbyL, HIGH);
+    analogWrite(pwmL, velocity);
+  }
+}
+
+
+
 
 
