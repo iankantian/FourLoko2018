@@ -63,43 +63,64 @@ void rightCoast() {
   digitalWrite(in1R, LOW);
 }
 
+void leftCoast() {
+  digitalWrite(stdbyL, LOW);
+  digitalWrite(in2L, LOW);
+  digitalWrite(in1L, LOW);
+}
+
+void leftBrake() {
+  digitalWrite(stdbyL, HIGH);
+  digitalWrite(in2L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
+  digitalWrite(in1L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
+}
+
 void rightBrake() {
   digitalWrite(stdbyR, HIGH);
   digitalWrite(in2R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
   digitalWrite(in1R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
 }
 
-void rightRotate(int velocity) {
+void motor(int motor, int velocity) {
+  // set in** pins for forward or reverse rotation
   if (velocity > 0) {
-    digitalWrite(in1R, HIGH);
-    digitalWrite(in2R, LOW);
+    if (motor == right) {
+      digitalWrite(in1R, HIGH);
+      digitalWrite(in2R, LOW);
+    } else if (motor == left) {
+      digitalWrite(in1L, LOW);
+      digitalWrite(in2L, HIGH);
+    }
   } else {
-    digitalWrite(in1R, LOW);
-    digitalWrite(in2R, HIGH);
     velocity = -velocity;
+
+    if (motor == right) {
+      digitalWrite(in1R, LOW);
+      digitalWrite(in2R, HIGH);
+    } else if (motor == left) {
+      digitalWrite(in1L, HIGH);
+      digitalWrite(in2L, LOW);
+    }
   }
 
-  digitalWrite(pwmR, HIGH);
-  analogWrite(stdbyR, velocity);
-}
+  if (motor == right) {
+    // todo: figure out why this don't work on right motor but does on the left !
+    // rightGo(); is a test that works, so I'm not sure what I'm doing wrong,
+    // it may be that analogWrite upon standbyR is bad and doesn't always work?
+    // when it works it's a definitely different motor experience, seems faster for a given pwm.
+    // analogWrite(pwmR, 80);
+    // digitalWrite(stdbyR, HIGH);
 
-void rightRotate(int velocity, bool braked) {
-  if (velocity > 0) {
-    digitalWrite(in1R, HIGH);
-    digitalWrite(in2R, LOW);
-  } else {
-    digitalWrite(in1R, LOW);
-    digitalWrite(in2R, HIGH);
-    velocity = -velocity;
-  }
-
-  if (braked) {
     digitalWrite(stdbyR, HIGH);
     analogWrite(pwmR, velocity);
-  } else {
-    digitalWrite(pwmR, HIGH);
-    analogWrite(stdbyR, velocity);
+    
+  } else if (motor == left) {
+    digitalWrite(stdbyL, HIGH);
+    analogWrite(pwmL, velocity);
   }
 }
+
+
+
 
 

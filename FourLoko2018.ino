@@ -10,16 +10,10 @@ void setup() {
 }
 
 void loop() {
-//  rightRotate(128);
-//  delay(50);
-//  rightCoast();
-//  delay(3000);
-//  rightRotate(128, true);
-//    delay(50);
+//  motor(left, 80);
+//  motor(right, 80);
+//  delay(100);
+//  leftBrake();
 //  rightBrake();
-//  delay(3000);
-//  rightRotate(128, false);
-//  delay(50);
-//  rightCoast();
-//  delay(3000);
+//  delay(4000);
 }
