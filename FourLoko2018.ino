@@ -1,10 +1,13 @@
+#include "FourLoko_Defines.h"
 #include "FourLoko.h"
 
+
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(9600);
   initPins();
+  initIrPwm();
+  startIrPwm();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
 }
