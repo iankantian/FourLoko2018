@@ -11,10 +11,10 @@
 #define rightPx 99    // IR Receiver for opponent detection, this one is right of center
 #define in1R    10    // one of the two directional inputs per h-bridge channel, the other being in2R (pin 13)
 #define pwmR    13    // speed controls, would really like to get a PWM channel for each motor, (4)
-#define pwmL    6
-#define in2L    8     // see truth table for how these go, consider re-wiring to allow coasting style PWM, it's braking style now...
-#define in1L    7     // https://toshiba.semicon-storage.com/info/docget.jsp?did=10660&prodName=TB6612FNG
-#define stdbyL  5     // pull to ground to enable H-Bridge channel, could probably have all 4 drivers on same...
+#define pwmL    8
+#define in2L    6     // see truth table for how these go, consider re-wiring to allow coasting style PWM, it's braking style now...
+#define in1L    5     // https://toshiba.semicon-storage.com/info/docget.jsp?did=10660&prodName=TB6612FNG
+#define stdbyL  7     // pull to ground to enable H-Bridge channel, could probably have all 4 drivers on same...
 #define irPwm   9     // ~38 kHz square wave at 50% duty cycle
 #define ctrPx   99     // center IR receiver
 #define usrBtn1 3     

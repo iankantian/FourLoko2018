@@ -5,15 +5,26 @@
 void setup() {
   Serial.begin(9600);
   initPins();
-  initIrPwm();
-  startIrPwm();
+//  initIrPwm();
+//  startIrPwm();
 }
 
 void loop() {
-//  motor(left, 80);
-//  motor(right, 80);
-//  delay(100);
-//  leftBrake();
-//  rightBrake();
-//  delay(4000);
+  newMotor(left, -30, coast);
+  delay(400);
+  newLeftCoast();
+  delay(4000);
+  newMotor(left, -30, brake);
+  delay(400);
+  newLeftBrake();
+  delay(4000);
+
+  newMotor(right, 30, coast);
+  delay(400);
+  newRightCoast();
+  delay(4000);
+  newMotor(right, 30, brake);
+  delay(400);
+  newRightBrake();
+  delay(4000);
 }

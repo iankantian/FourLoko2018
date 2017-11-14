@@ -105,19 +105,103 @@ void motor(int motor, int velocity) {
 
   if (motor == right) {
     // todo: figure out why this don't work on right motor but does on the left !
-    // rightGo(); is a test that works, so I'm not sure what I'm doing wrong,
     // it may be that analogWrite upon standbyR is bad and doesn't always work?
     // when it works it's a definitely different motor experience, seems faster for a given pwm.
-    // analogWrite(pwmR, 80);
-    // digitalWrite(stdbyR, HIGH);
+    // analogWrite(stdbyR, 80);
+    // digitalWrite(pwmR, HIGH);
 
     digitalWrite(stdbyR, HIGH);
     analogWrite(pwmR, velocity);
-    
+
   } else if (motor == left) {
     digitalWrite(stdbyL, HIGH);
     analogWrite(pwmL, velocity);
   }
+}
+
+void newLeftBrake() {
+  digitalWrite(pwmL, HIGH);
+  digitalWrite(stdbyL, HIGH);
+
+  digitalWrite(in2L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
+  digitalWrite(in1L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
+}
+
+void newLeftCoast() {
+  digitalWrite(pwmL, HIGH);
+  digitalWrite(stdbyL, HIGH);
+
+  digitalWrite(in2L, LOW); // raising both IN's high or setting PWM LOW turns on brakes
+  digitalWrite(in1L, LOW); // raising both IN's high or setting PWM LOW turns on
+}
+
+void newRightBrake() {
+  digitalWrite(pwmR, HIGH);
+  digitalWrite(stdbyR, HIGH);
+
+  digitalWrite(in2R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
+  digitalWrite(in1R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
+}
+
+void newRightCoast() {
+  digitalWrite(pwmR, HIGH);
+  digitalWrite(stdbyR, HIGH);
+
+  digitalWrite(in2R, LOW); // raising both IN's high or setting PWM LOW turns on brakes
+  digitalWrite(in1R, LOW); // raising both IN's high or setting PWM LOW turns on
+}
+void newMotor(int motor, int velocity, int brakeState) {
+  if (motor == left) {
+
+    digitalWrite(stdbyL, HIGH); // todo: maybe this is always high too?
+    digitalWrite(pwmL, HIGH); // todo: maybe this is always high?
+
+    if (velocity > 0) {
+      if (brakeState == brake) {
+        analogWrite(in1L, (255 - velocity));
+        digitalWrite(in2L, HIGH);
+      } else if (brakeState == coast) {
+        digitalWrite(in1L, LOW);
+        analogWrite(in2L, velocity);
+      }
+    } else {
+      velocity = -velocity;
+
+      if (brakeState == brake) {
+        digitalWrite(in1L, HIGH);
+        analogWrite(in2L, 255 - velocity);
+      } else if (brakeState == coast) {
+        analogWrite(in1L, velocity);
+        digitalWrite(in2L, LOW);
+      }
+    }
+  } else if (motor == right) {
+
+    digitalWrite(stdbyR, HIGH); // todo: maybe this is always high too?
+    digitalWrite(pwmR, HIGH); // todo: maybe this is always high?
+
+    if (velocity > 0) {
+      if (brakeState == brake) {
+        analogWrite(in1R, (255 - velocity));
+        digitalWrite(in2R, HIGH);
+      } else if (brakeState == coast) {
+        digitalWrite(in1R, LOW);
+        analogWrite(in2R, velocity);
+      }
+    } else {
+      velocity = -velocity;
+
+      if (brakeState == brake) {
+        digitalWrite(in1R, HIGH);
+        analogWrite(in2R, 255 - velocity);
+      } else if (brakeState == coast) {
+        analogWrite(in1R, velocity);
+        digitalWrite(in2R, LOW);
+      }
+    }
+
+  }
+
 }
 
 
