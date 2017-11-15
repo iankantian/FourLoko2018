@@ -43,5 +43,5 @@ int zThetaDisplacement = 0;
 #define center    3
 #define right     4
 #define farRight  5
-#define coast false
-#define brake true
+#define coasting false
+#define braking true

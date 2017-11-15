@@ -26,6 +26,17 @@ void initPins() {
   pinMode(edgeRight, INPUT);
   pinMode(fRightPx, INPUT);
   pinMode(gyroZ, INPUT);
+
+  // these are ALWAYS HIGH, TODO: do this in hardware and free up these four pins.
+  // well, use just one pin and use that to standby all of the motors.
+  digitalWrite(in2L, LOW);
+  digitalWrite(in1L, LOW);
+  digitalWrite(pwmL, HIGH);
+  digitalWrite(stdbyL, HIGH);
+  digitalWrite(in2R, LOW);
+  digitalWrite(in1R, LOW);
+  digitalWrite(pwmR, HIGH);
+  digitalWrite(stdbyR, HIGH);
 }
 
 void initIrPwm() {
@@ -57,36 +68,32 @@ void updateGyroDisplacement() {
   }
 }
 
-void leftBrake() {
-  digitalWrite(pwmL, HIGH);
-  digitalWrite(stdbyL, HIGH);
-
-  digitalWrite(in2L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
-  digitalWrite(in1L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
+void brake(int motor) {
+  if (motor == left) {
+    digitalWrite(pwmL, HIGH);
+    digitalWrite(stdbyL, HIGH);
+    digitalWrite(in2L, HIGH);
+    digitalWrite(in1L, HIGH);
+  } else {
+    digitalWrite(pwmR, HIGH);
+    digitalWrite(stdbyR, HIGH);
+    digitalWrite(in2R, HIGH);
+    digitalWrite(in1R, HIGH);
+  }
 }
 
-void leftCoast() {
-  digitalWrite(pwmL, HIGH);
-  digitalWrite(stdbyL, HIGH);
-
-  digitalWrite(in2L, LOW); // raising both IN's high or setting PWM LOW turns on brakes
-  digitalWrite(in1L, LOW); // raising both IN's high or setting PWM LOW turns on
-}
-
-void rightBrake() {
-  digitalWrite(pwmR, HIGH);
-  digitalWrite(stdbyR, HIGH);
-
-  digitalWrite(in2R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
-  digitalWrite(in1R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
-}
-
-void rightCoast() {
-  digitalWrite(pwmR, HIGH);
-  digitalWrite(stdbyR, HIGH);
-
-  digitalWrite(in2R, LOW);
-  digitalWrite(in1R, LOW);
+void coast(int motor) {
+  if (motor == left) {
+    digitalWrite(pwmL, HIGH);
+    digitalWrite(stdbyL, HIGH);
+    digitalWrite(in2L, LOW);
+    digitalWrite(in1L, LOW);
+  } else {
+    digitalWrite(pwmR, HIGH);
+    digitalWrite(stdbyR, HIGH);
+    digitalWrite(in2R, LOW);
+    digitalWrite(in1R, LOW);
+  }
 }
 
 void motor(int motor, int velocity, int brakeState) {
@@ -96,19 +103,19 @@ void motor(int motor, int velocity, int brakeState) {
     digitalWrite(pwmL, HIGH); // todo: maybe this is always high?
 
     if (velocity > 0) {
-      if (brakeState == coast) {
+      if (brakeState == coasting) {
         digitalWrite(in1L, LOW);
         analogWrite(in2L, velocity);
-      } else if (brakeState == brake) {
+      } else if (brakeState == braking) {
         digitalWrite(in1L, LOW);
         analogWrite(in2L, velocity);
       }
     } else {
       velocity = -velocity;
-      if (brakeState == coast) {
+      if (brakeState == coasting) {
         digitalWrite(in1L, HIGH);
         analogWrite(in2L, (255 - velocity));
-      } else if (brakeState == brake) {
+      } else if (brakeState == braking) {
         digitalWrite(in1L, HIGH);
         analogWrite(in2L, (255 - velocity));
       }
@@ -120,19 +127,19 @@ void motor(int motor, int velocity, int brakeState) {
     digitalWrite(pwmR, HIGH); // todo: maybe this is always high?
 
     if (velocity > 0) {
-      if (brakeState == coast) {
+      if (brakeState == coasting) {
         digitalWrite(in1R, HIGH);
         analogWrite(in2R, (255 - velocity));
-      } else if (brakeState == brake) {
+      } else if (brakeState == braking) {
         digitalWrite(in1R, HIGH);
         analogWrite(in2R, (255 - velocity));
       }
     } else {
       velocity = -velocity;
-      if (brakeState == coast) {
+      if (brakeState == coasting) {
         digitalWrite(in1R, LOW);
         analogWrite(in2R, velocity);
-      } else if (brakeState == brake) {
+      } else if (brakeState == braking) {
         digitalWrite(in1R, LOW);
         analogWrite(in2R, velocity);
       }
