@@ -57,69 +57,7 @@ void updateGyroDisplacement() {
   }
 }
 
-void rightCoast() {
-  digitalWrite(stdbyR, LOW);
-  digitalWrite(in2R, LOW);
-  digitalWrite(in1R, LOW);
-}
-
-void leftCoast() {
-  digitalWrite(stdbyL, LOW);
-  digitalWrite(in2L, LOW);
-  digitalWrite(in1L, LOW);
-}
-
 void leftBrake() {
-  digitalWrite(stdbyL, HIGH);
-  digitalWrite(in2L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
-  digitalWrite(in1L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
-}
-
-void rightBrake() {
-  digitalWrite(stdbyR, HIGH);
-  digitalWrite(in2R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
-  digitalWrite(in1R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
-}
-
-void motor(int motor, int velocity) {
-  // set in** pins for forward or reverse rotation
-  if (velocity > 0) {
-    if (motor == right) {
-      digitalWrite(in1R, HIGH);
-      digitalWrite(in2R, LOW);
-    } else if (motor == left) {
-      digitalWrite(in1L, LOW);
-      digitalWrite(in2L, HIGH);
-    }
-  } else {
-    velocity = -velocity;
-
-    if (motor == right) {
-      digitalWrite(in1R, LOW);
-      digitalWrite(in2R, HIGH);
-    } else if (motor == left) {
-      digitalWrite(in1L, HIGH);
-      digitalWrite(in2L, LOW);
-    }
-  }
-
-  if (motor == right) {
-    // todo: figure out why this don't work on right motor but does on the left !
-    // it may be that analogWrite upon standbyR is bad and doesn't always work?
-    // when it works it's a definitely different motor experience, seems faster for a given pwm.
-    // analogWrite(stdbyR, 80);
-    // digitalWrite(pwmR, HIGH);
-
-    digitalWrite(stdbyR, HIGH);
-    analogWrite(pwmR, velocity);
-
-  } else if (motor == left) {
-    digitalWrite(stdbyL, HIGH);
-    analogWrite(pwmL, velocity);
-  }
-}
-
-void newLeftBrake() {
   digitalWrite(pwmL, HIGH);
   digitalWrite(stdbyL, HIGH);
 
@@ -127,7 +65,7 @@ void newLeftBrake() {
   digitalWrite(in1L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
 }
 
-void newLeftCoast() {
+void leftCoast() {
   digitalWrite(pwmL, HIGH);
   digitalWrite(stdbyL, HIGH);
 
@@ -135,7 +73,7 @@ void newLeftCoast() {
   digitalWrite(in1L, LOW); // raising both IN's high or setting PWM LOW turns on
 }
 
-void newRightBrake() {
+void rightBrake() {
   digitalWrite(pwmR, HIGH);
   digitalWrite(stdbyR, HIGH);
 
@@ -143,7 +81,7 @@ void newRightBrake() {
   digitalWrite(in1R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
 }
 
-void newRightCoast() {
+void rightCoast() {
   digitalWrite(pwmR, HIGH);
   digitalWrite(stdbyR, HIGH);
 
@@ -151,7 +89,7 @@ void newRightCoast() {
   digitalWrite(in1R, LOW);
 }
 
-void newMotor(int motor, int velocity, int brakeState) {
+void motor(int motor, int velocity, int brakeState) {
   if (motor == left) {
 
     digitalWrite(stdbyL, HIGH); // todo: maybe this is always high too?
@@ -162,19 +100,19 @@ void newMotor(int motor, int velocity, int brakeState) {
         digitalWrite(in1L, LOW);
         analogWrite(in2L, velocity);
       } else if (brakeState == brake) {
-        analogWrite(in1L, (255 - velocity));
-        digitalWrite(in2L, HIGH);
+        digitalWrite(in1L, LOW);
+        analogWrite(in2L, velocity);
       }
-
     } else {
       velocity = -velocity;
       if (brakeState == coast) {
         digitalWrite(in1L, HIGH);
         analogWrite(in2L, (255 - velocity));
       } else if (brakeState == brake) {
-        analogWrite(in1L, velocity);
-        digitalWrite(in2L, LOW);
+        digitalWrite(in1L, HIGH);
+        analogWrite(in2L, (255 - velocity));
       }
+
     }
   } else if (motor == right) {
 

@@ -10,24 +10,49 @@ void setup() {
 }
 
 void loop() {
-  newMotor(right, -30, coast);
-  Serial.println("coasting backward");
-  delay(300);
-  newRightCoast();
-  delay(4000);
-  newMotor(right, -30, brake);
-  Serial.println("braking backward");
-  delay(300);
-  newRightBrake();
-  delay(4000);
-  newMotor(right, 30, coast);
-  Serial.println("coasting forward");
-  delay(300);
-  newRightCoast();
-  delay(4000);
-  newMotor(right, 30, brake);
-  Serial.println("braking forward");
-  delay(300);
-  newRightBrake();
-  delay(4000);
+  int testSpeed = 30;
+  int driveDuration = 300;
+  int restDuration = 4000;
+  
+  motor(left, -testSpeed, coast);
+  Serial.println("left coasting backward");
+  delay(driveDuration);
+  leftCoast();
+  delay(restDuration);
+  motor(left, -testSpeed, brake);
+  Serial.println("left braking backward");
+  delay(driveDuration);
+  leftBrake();
+  delay(restDuration);
+  motor(left, testSpeed, coast);
+  Serial.println("left coasting forward");
+  delay(driveDuration);
+  leftCoast();
+  delay(restDuration);
+  motor(left, testSpeed, brake);
+  Serial.println("left braking forward");
+  delay(driveDuration);
+  leftBrake();
+  delay(restDuration);
+
+  motor(right, -testSpeed, coast);
+  Serial.println("right coasting backward");
+  delay(driveDuration);
+  rightCoast();
+  delay(restDuration);
+  motor(right, -testSpeed, brake);
+  Serial.println("right braking backward");
+  delay(driveDuration);
+  rightBrake();
+  delay(restDuration);
+  motor(right, testSpeed, coast);
+  Serial.println("right coasting forward");
+  delay(driveDuration);
+  rightCoast();
+  delay(restDuration);
+  motor(right, testSpeed, brake);
+  Serial.println("right braking forward");
+  delay(driveDuration);
+  rightBrake();
+  delay(restDuration);
 }
