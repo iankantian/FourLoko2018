@@ -10,21 +10,24 @@ void setup() {
 }
 
 void loop() {
-  newMotor(left, -30, coast);
-  delay(400);
-  newLeftCoast();
+  newMotor(right, -30, coast);
+  Serial.println("coasting backward");
+  delay(300);
+  newRightCoast();
   delay(4000);
-  newMotor(left, -30, brake);
-  delay(400);
-  newLeftBrake();
+  newMotor(right, -30, brake);
+  Serial.println("braking backward");
+  delay(300);
+  newRightBrake();
   delay(4000);
-
   newMotor(right, 30, coast);
-  delay(400);
+  Serial.println("coasting forward");
+  delay(300);
   newRightCoast();
   delay(4000);
   newMotor(right, 30, brake);
-  delay(400);
+  Serial.println("braking forward");
+  delay(300);
   newRightBrake();
   delay(4000);
 }

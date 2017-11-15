@@ -147,9 +147,10 @@ void newRightCoast() {
   digitalWrite(pwmR, HIGH);
   digitalWrite(stdbyR, HIGH);
 
-  digitalWrite(in2R, LOW); // raising both IN's high or setting PWM LOW turns on brakes
-  digitalWrite(in1R, LOW); // raising both IN's high or setting PWM LOW turns on
+  digitalWrite(in2R, LOW);
+  digitalWrite(in1R, LOW);
 }
+
 void newMotor(int motor, int velocity, int brakeState) {
   if (motor == left) {
 
@@ -157,20 +158,20 @@ void newMotor(int motor, int velocity, int brakeState) {
     digitalWrite(pwmL, HIGH); // todo: maybe this is always high?
 
     if (velocity > 0) {
-      if (brakeState == brake) {
-        analogWrite(in1L, (255 - velocity));
-        digitalWrite(in2L, HIGH);
-      } else if (brakeState == coast) {
+      if (brakeState == coast) {
         digitalWrite(in1L, LOW);
         analogWrite(in2L, velocity);
+      } else if (brakeState == brake) {
+        analogWrite(in1L, (255 - velocity));
+        digitalWrite(in2L, HIGH);
       }
+
     } else {
       velocity = -velocity;
-
-      if (brakeState == brake) {
+      if (brakeState == coast) {
         digitalWrite(in1L, HIGH);
-        analogWrite(in2L, 255 - velocity);
-      } else if (brakeState == coast) {
+        analogWrite(in2L, (255 - velocity));
+      } else if (brakeState == brake) {
         analogWrite(in1L, velocity);
         digitalWrite(in2L, LOW);
       }
@@ -181,25 +182,23 @@ void newMotor(int motor, int velocity, int brakeState) {
     digitalWrite(pwmR, HIGH); // todo: maybe this is always high?
 
     if (velocity > 0) {
-      if (brakeState == brake) {
-        analogWrite(in1R, (255 - velocity));
-        digitalWrite(in2R, HIGH);
-      } else if (brakeState == coast) {
-        digitalWrite(in1R, LOW);
-        analogWrite(in2R, velocity);
+      if (brakeState == coast) {
+        digitalWrite(in1R, HIGH);
+        analogWrite(in2R, (255 - velocity));
+      } else if (brakeState == brake) {
+        digitalWrite(in1R, HIGH);
+        analogWrite(in2R, (255 - velocity));
       }
     } else {
       velocity = -velocity;
-
-      if (brakeState == brake) {
-        digitalWrite(in1R, HIGH);
-        analogWrite(in2R, 255 - velocity);
-      } else if (brakeState == coast) {
-        analogWrite(in1R, velocity);
-        digitalWrite(in2R, LOW);
+      if (brakeState == coast) {
+        digitalWrite(in1R, LOW);
+        analogWrite(in2R, velocity);
+      } else if (brakeState == brake) {
+        digitalWrite(in1R, LOW);
+        analogWrite(in2R, velocity);
       }
     }
-
   }
 
 }
