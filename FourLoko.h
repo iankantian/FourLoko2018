@@ -5,29 +5,6 @@
    helper functions for FourLoko, my minisumo bot
 */
 
-void initPins() {
-  pinMode(rightPx, INPUT);
-  pinMode(pwmR, OUTPUT); // TODO: SWITCH TO OUTPUT FOR USING MOTORS
-  pinMode(pwmL, OUTPUT); // TODO: SWITCH TO OUTPUT FOR USING MOTORS
-  pinMode(in1L, OUTPUT);
-  pinMode(in2L, OUTPUT);
-  pinMode(stdbyL, OUTPUT);
-  pinMode(stdbyR, OUTPUT);
-  pinMode(in1R, OUTPUT);
-  pinMode(in2R, OUTPUT);
-  pinMode(irPwm, OUTPUT);
-  pinMode(ctrPx, INPUT);
-  pinMode(usrBtn1, INPUT);
-  pinMode(usrBtn2, INPUT);
-  pinMode(fLefttPx, INPUT);
-  pinMode(leftPx, INPUT);
-  pinMode(vSense, INPUT);
-  pinMode(edgeLeft, INPUT);
-  pinMode(edgeRight, INPUT);
-  pinMode(fRightPx, INPUT);
-  pinMode(gyroZ, INPUT);
-}
-
 void initIrPwm() {
   TCCR1A = B01000000;
   TCCR1B = B00001001;
@@ -57,67 +34,92 @@ void updateGyroDisplacement() {
   }
 }
 
-void rightCoast() {
-  digitalWrite(stdbyR, LOW);
-  digitalWrite(in2R, LOW);
-  digitalWrite(in1R, LOW);
-}
-
-void leftCoast() {
-  digitalWrite(stdbyL, LOW);
-  digitalWrite(in2L, LOW);
-  digitalWrite(in1L, LOW);
-}
-
-void leftBrake() {
-  digitalWrite(stdbyL, HIGH);
-  digitalWrite(in2L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
-  digitalWrite(in1L, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
-}
-
-void rightBrake() {
-  digitalWrite(stdbyR, HIGH);
-  digitalWrite(in2R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
-  digitalWrite(in1R, HIGH); // raising both IN's high or setting PWM LOW turns on brakes
-}
-
-void motor(int motor, int velocity) {
-  // set in** pins for forward or reverse rotation
-  if (velocity > 0) {
-    if (motor == right) {
-      digitalWrite(in1R, HIGH);
-      digitalWrite(in2R, LOW);
-    } else if (motor == left) {
-      digitalWrite(in1L, LOW);
-      digitalWrite(in2L, HIGH);
-    }
+void brake(int motor) {
+  if (motor == left) {
+    digitalWrite(in2L, HIGH);
+    digitalWrite(in1L, HIGH);
   } else {
-    velocity = -velocity;
+    digitalWrite(in2R, HIGH);
+    digitalWrite(in1R, HIGH);
+  }
+}
 
-    if (motor == right) {
-      digitalWrite(in1R, LOW);
-      digitalWrite(in2R, HIGH);
-    } else if (motor == left) {
-      digitalWrite(in1L, HIGH);
-      digitalWrite(in2L, LOW);
+void coast(int motor) {
+  if (motor == left) {
+    digitalWrite(in2L, LOW);
+    digitalWrite(in1L, LOW);
+  } else {
+    digitalWrite(in2R, LOW);
+    digitalWrite(in1R, LOW);
+  }
+}
+
+void motor(int motor, int velocity, int brakeState) {
+  if (motor == left) {
+
+    if (velocity > 0) {
+      if (brakeState == coasting) {
+        digitalWrite(in1L, LOW);
+        analogWrite(in2L, velocity);
+      } else if (brakeState == braking) {
+        digitalWrite(in1L, LOW);
+        analogWrite(in2L, velocity);
+      }
+    } else {
+      velocity = -velocity;
+      if (brakeState == coasting) {
+        digitalWrite(in1L, HIGH);
+        analogWrite(in2L, (255 - velocity));
+      } else if (brakeState == braking) {
+        digitalWrite(in1L, HIGH);
+        analogWrite(in2L, (255 - velocity));
+      }
+
+    }
+  } else if (motor == right) {
+
+    if (velocity > 0) {
+      if (brakeState == coasting) {
+        digitalWrite(in1R, HIGH);
+        analogWrite(in2R, (255 - velocity));
+      } else if (brakeState == braking) {
+        digitalWrite(in1R, HIGH);
+        analogWrite(in2R, (255 - velocity));
+      }
+    } else {
+      velocity = -velocity;
+      if (brakeState == coasting) {
+        digitalWrite(in1R, LOW);
+        analogWrite(in2R, velocity);
+      } else if (brakeState == braking) {
+        digitalWrite(in1R, LOW);
+        analogWrite(in2R, velocity);
+      }
     }
   }
+}
 
-  if (motor == right) {
-    // todo: figure out why this don't work on right motor but does on the left !
-    // rightGo(); is a test that works, so I'm not sure what I'm doing wrong,
-    // it may be that analogWrite upon standbyR is bad and doesn't always work?
-    // when it works it's a definitely different motor experience, seems faster for a given pwm.
-    // analogWrite(pwmR, 80);
-    // digitalWrite(stdbyR, HIGH);
+void initPins() {
+  pinMode(rightPx, INPUT);
+  pinMode(in1L, OUTPUT);
+  pinMode(in2L, OUTPUT);
+  pinMode(in1R, OUTPUT);
+  pinMode(in2R, OUTPUT);
+  pinMode(irPwm, OUTPUT);
+  pinMode(ctrPx, INPUT);
+  pinMode(usrBtn1, INPUT);
+  pinMode(usrBtn2, INPUT);
+  pinMode(fLefttPx, INPUT);
+  pinMode(leftPx, INPUT);
+  pinMode(vSense, INPUT);
+  pinMode(edgeLeft, INPUT);
+  pinMode(edgeRight, INPUT);
+  pinMode(fRightPx, INPUT);
+  pinMode(gyroZ, INPUT);
 
-    digitalWrite(stdbyR, HIGH);
-    analogWrite(pwmR, velocity);
-    
-  } else if (motor == left) {
-    digitalWrite(stdbyL, HIGH);
-    analogWrite(pwmL, velocity);
-  }
+  // ensure motor driver pins are LOW
+  coast(left);
+  coast(right);
 }
 
 
