@@ -18,13 +18,28 @@ void startIrPwm() {
   OCR1A = ocrConstant;
 }
 
-void printOpponentSensors() {
-  Serial.print("Opponent Sensors, LL, L, C, R, RR: ");
-  Serial.print(digitalRead(fLefttPx));
-  Serial.print(digitalRead(leftPx));
-  Serial.print(digitalRead(ctrPx));
-  Serial.print(digitalRead(rightPx));
-  Serial.println(digitalRead(fRightPx));
+void printOpponentSensors(int *detectionArray) {
+  for (int i = 0; i < 5; i++) {
+    Serial.print(detectionArray[i]);
+    Serial.print(", ");
+  }
+  Serial.println("");
+}
+
+void getOpponentSensors(int *detectionArray) {
+  detectionArray[0] = digitalRead(fLefttPx);
+  detectionArray[1] = digitalRead(leftPx);
+  detectionArray[2] = digitalRead(ctrPx);
+  detectionArray[3] = digitalRead(rightPx);
+  detectionArray[4] = digitalRead(fRightPx);
+}
+
+int whereIsOpponent() {
+  int result = 0; // which direction did is the opponent?
+  int detectionArray[5]; // declare array of current opponennt sensor states
+  getOpponentSensors(&detectionArray[0]);
+  printOpponentSensors(detectionArray);
+  return result;
 }
 
 void updateGyroDisplacement() {
@@ -120,6 +135,54 @@ void initPins() {
   // ensure motor driver pins are LOW
   coast(left);
   coast(right);
+}
+
+void motorModeDemo() {
+  int testSpeed = 30;
+  int driveDuration = 300;
+  int restDuration = 2000;
+
+  motor(left, -testSpeed, coasting);
+  Serial.println("left coasting backward");
+  delay(driveDuration);
+  coast(left);
+  delay(restDuration);
+  motor(left, -testSpeed, braking);
+  Serial.println("left braking backward");
+  delay(driveDuration);
+  brake(left);
+  delay(restDuration);
+  motor(left, testSpeed, coasting);
+  Serial.println("left coasting forward");
+  delay(driveDuration);
+  coast(left);
+  delay(restDuration);
+  motor(left, testSpeed, braking);
+  Serial.println("left braking forward");
+  delay(driveDuration);
+  brake(left);
+  delay(restDuration);
+
+  motor(right, -testSpeed, coasting);
+  Serial.println("right coasting backward");
+  delay(driveDuration);
+  coast(right);
+  delay(restDuration);
+  motor(right, -testSpeed, braking);
+  Serial.println("right braking backward");
+  delay(driveDuration);
+  brake(right);
+  delay(restDuration);
+  motor(right, testSpeed, coasting);
+  Serial.println("right coasting forward");
+  delay(driveDuration);
+  coast(right);
+  delay(restDuration);
+  motor(right, testSpeed, braking);
+  Serial.println("right braking forward");
+  delay(driveDuration);
+  brake(right);
+  delay(restDuration);
 }
 
 
