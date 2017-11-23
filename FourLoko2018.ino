@@ -3,13 +3,22 @@
 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   initPins();
-  initIrPwm();
-//  startIrPwm();
+  startIrPwm();
 }
 
+int onLoops = 100;
+int offMs = 40;
+int currentLoop = 0;
+
 void loop() {
+  currentLoop++;
+  if (currentLoop > onLoops) { // cooldown the IR sensors, they get saturated and need to be left off.
+    currentLoop = 0;
+    stopIrPwm();
+    delay(offMs);
+    startIrPwm();
+  }
   whereIsOpponent();
-  delay(100);
 }

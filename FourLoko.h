@@ -8,6 +8,7 @@
 void initIrPwm() {
   TCCR1A = B01000000;
   TCCR1B = B00001001;
+  OCR1A = 0;
 }
 
 void stopIrPwm() {
@@ -37,8 +38,12 @@ void getOpponentSensors(int *detectionArray) {
 int whereIsOpponent() {
   int result = 0; // which direction did is the opponent?
   int detectionArray[5]; // declare array of current opponennt sensor states
+  
   getOpponentSensors(&detectionArray[0]);
+  
+  // todo: remove this and replace with actual logic to figure out where opponent is
   printOpponentSensors(detectionArray);
+  
   return result;
 }
 
@@ -49,6 +54,15 @@ void updateGyroDisplacement() {
   }
 }
 
+
+void motorsDisable() {
+  digitalWrite(motorStby, LOW);
+}
+
+void motorsEnable() {
+  digitalWrite(motorStby, HIGH);
+}
+
 void brake(int motor) {
   if (motor == left) {
     digitalWrite(in2L, HIGH);
@@ -57,6 +71,7 @@ void brake(int motor) {
     digitalWrite(in2R, HIGH);
     digitalWrite(in1R, HIGH);
   }
+  motorsEnable();
 }
 
 void coast(int motor) {
@@ -67,6 +82,7 @@ void coast(int motor) {
     digitalWrite(in2R, LOW);
     digitalWrite(in1R, LOW);
   }
+  motorsEnable();
 }
 
 void motor(int motor, int velocity, int brakeState) {
@@ -112,6 +128,7 @@ void motor(int motor, int velocity, int brakeState) {
       }
     }
   }
+  motorsEnable();
 }
 
 void initPins() {
@@ -131,6 +148,10 @@ void initPins() {
   pinMode(edgeRight, INPUT);
   pinMode(fRightPx, INPUT);
   pinMode(gyroZ, INPUT);
+  pinMode(motorStby, OUTPUT);
+
+  motorsDisable();
+  initIrPwm();
 
   // ensure motor driver pins are LOW
   coast(left);

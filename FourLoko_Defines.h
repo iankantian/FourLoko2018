@@ -18,7 +18,7 @@
 #define usrBtn2 2
 #define fLefttPx 4    // far left of center opponent IR detector
 #define leftPx   0    // left of center opponent IR detector
-
+#define motorStby 7
 #define in2R      13
 #define vSense    A0  // battery sensing, on 3 cell lipo / 3: 10% is 3.7v reads about 435, 100% 4.2v reads 495
 #define edgeLeft  A1  // for detecting the edge of the sumo dohyo ~43 edge, 1017 dohyo
@@ -43,3 +43,5 @@ int zThetaDisplacement = 0;
 #define braking true
 #define detection  0
 #define noDetection 1
+
+
