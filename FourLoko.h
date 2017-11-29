@@ -41,8 +41,9 @@ int whereIsOpponent() {
   
   getOpponentSensors(&detectionArray[0]);
   
-  // todo: remove this and replace with actual logic to figure out where opponent is
-  printOpponentSensors(detectionArray);
+  // todo: remove this and replace with actual logic to figure out where opponent is and return a number
+//  printOpponentSensors(detectionArray);
+  result = detectionArray[2];
   
   return result;
 }
