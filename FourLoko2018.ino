@@ -40,6 +40,8 @@ void loop() {
     for (int i = 0; i < arrayHistoryLength; i++) { // total the values
       detectTotal += arrayHistory[i];
     }
+    Serial.print(analogRead(vSense) / 20);
+    Serial.print(" ");
     Serial.println(detectTotal);
   }
 }
