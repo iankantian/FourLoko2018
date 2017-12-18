@@ -8,11 +8,12 @@ const int loopMax = 100;
 int detectTotal = 0;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   initPins();
   for (int i = 0; i < arrayHistoryLength; i++) { // initialize the array
     arrayHistory[i] = 0;
   }
+  startIrPwm();
 }
 
 
@@ -26,12 +27,8 @@ void loop() {
 
 
 
-  startIrPwm();
-  delayMicroseconds(889);
-  int res = whereIsOpponent() == 1 ? 0 : 1;
+  int res = digitalRead(8) == 1 ? 0 : 1;
   arrayHistory[l] = res;
-//  stopIrPwm();
-  delayMicroseconds(889);
 
 
 

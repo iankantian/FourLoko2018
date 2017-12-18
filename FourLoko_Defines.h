@@ -12,8 +12,8 @@
 #define in1R    12    // one of the two directional inputs per h-bridge channel, the other being in2R (pin 13)
 #define in2L    6     // see truth table for how these go, consider re-wiring to allow coasting style PWM, it's braking style now...
 #define in1L    5     // https://toshiba.semicon-storage.com/info/docget.jsp?did=10660&prodName=TB6612FNG
-#define irPwm   9     // ~38 kHz square wave at 50% duty cycle
-#define ctrPx   1     // center IR receiver
+#define irPwm   9     // ~56 kHz square wave at 50% duty cycle
+#define ctrPx   8     // center IR receiver
 #define usrBtn1 3     
 #define usrBtn2 2
 #define fLefttPx 4    // far left of center opponent IR detector
@@ -26,7 +26,7 @@
 #define fRightPx  A4  // far right of center IR detector
 #define gyroZ     99  // Z axis gyro! an analog sensor, might use it for directional integration? no rate is 293, reduces for CC rotation integrating delta at 50z gives units of about 2200 per rotation
 
-#define IR_CLOCK_RATE    36000L
+#define IR_CLOCK_RATE    56000L
 #define ocrConstant     (F_CPU/(IR_CLOCK_RATE*2L)-1)
 
 #define zeroRateGyroZ    293 // todo: do some automatic calibration instead
